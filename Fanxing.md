@@ -34,7 +34,7 @@
 	var list = new ArrayList();
 	list.Add(25);
 	list.Add("abcd");
-	//添加类
+	//添加类,要有该类名
 	list.Add(new MyClass());
 	foreach (var item in list)
     {
@@ -62,3 +62,4 @@
 	var myClassList = new List<MyClass>();
 	myClassList.Add(new MyClass());
 如果是类,如第三个中 new List<MyClass>();<T>中的T该为已有类名,表面只能引用这个类.
+*****
