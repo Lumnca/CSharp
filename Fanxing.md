@@ -1,4 +1,4 @@
-## 性能
+## 1.1性能
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;从值类型转换为引用类型称为**装箱**>.如果方法需要把一个对象作为参数,同时转递一个值类型,装箱操作就会自动运行.另一方面,
 装箱的值类型可以使用拆箱操作作转换为值类型.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;下面例子显示了System.Collections名称空间的ArrayList类.ArrayList储存对象,Add()方法定义为需要把一个对象作为参数.
@@ -16,3 +16,42 @@
 	    Console.WriteLine(i2);
 	}
 	装箱和拆箱操作很容易,但性能损失比较大,遍历许多项尤其如此
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;using System.Collections.Generic名称空间中的List<T>类不使用对象,而是在使用时定义类型.在下面的例子中,List<T>类的范型定义为int,所以int类型在编译器动态生成的类中使用,不再进行装箱和拆箱：
+	
+	var list = new List<int>();
+	list.Add(44);
+	int i1 = list[0];
+	foreach(int i2 in list)
+	{
+	    Console.WriteLine(i2);
+	}
+因为List<T>类不使用对象,而是在使用时定义类型.所以在int类型下list.Add("abcdef")方法不能添加字符类型，list类只接受int型,添加其余类型编译器会报错.
+*********
+	
+## 1.2类型安全
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;范型的另一个特性是类型安全.与ArrayList类一样,如果使用对象,就可以在这个集合中添加任意类型.下面的例子在ArrayList类型的集合中添加3个不同类型
+
+	var list = new ArrayList();
+	list.Add(25);
+	list.Add("abcd");
+	//添加类
+	list.Add(new MyClass());
+	foreach (var item in list)
+        {
+           Console.WriteLine(item);
+	   //如果是类会遍历显示是类名,如fanxing.MyClass
+        }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在范型类List<T>中,范型类型T定义了允许使用的类型,即T所表示的类型为唯一使用类型,其余类型加入会编译器错误
+
+	//只允许T型加入(T代表各种类型如int,string,new class...)
+	var list = new List<T>();
+	
+	//只允许int型加入
+	var list = new List<int>();
+	
+	//只允许string型加入
+	var list = new List<string>();
+*****
+## 1.3二进制代码的重用
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;范型类可以定义一次,并且可以许多不同的类型实例化.例如System.Collections.Generic名称空间中的List<T>类
+	
