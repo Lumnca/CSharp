@@ -53,5 +53,11 @@
 	var list = new List<string>();
 *****
 ## 1.3二进制代码的重用
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;范型类可以定义一次,并且可以许多不同的类型实例化.例如System.Collections.Generic名称空间中的List<T>类
-	
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;范型类可以定义一次,并且可以许多不同的类型实例化,例如System.Collections.Generic名称空间中的List<T>用一个int,string,new Class类型实例化：
+
+	var list = new List<int>();
+	list.Add(41);
+	var stringList = new List<string>();
+	stringList.Add("abcd");
+	var myClassList = new List<MyClass>();
+	myClassList.Add(new MyClass());
