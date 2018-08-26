@@ -37,10 +37,10 @@
 	//添加类
 	list.Add(new MyClass());
 	foreach (var item in list)
-        {
-           Console.WriteLine(item);
+    {
+       Console.WriteLine(item);
 	   //如果是类会遍历显示是类名,如fanxing.MyClass
-        }
+    }
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在范型类List<T>中,范型类型T定义了允许使用的类型,即T所表示的类型为唯一使用类型,其余类型加入会编译器错误
 
 	//只允许T型加入(T代表各种类型如int,string,new class...)
@@ -61,3 +61,4 @@
 	stringList.Add("abcd");
 	var myClassList = new List<MyClass>();
 	myClassList.Add(new MyClass());
+如果是类,如第三个中 new List<MyClass>();<T>中的T该为已有类名,表面只能引用这个类.
