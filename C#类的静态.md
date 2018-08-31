@@ -1,10 +1,10 @@
 # :file_folder:C#类的静态
 <p id="title"></p>
 <h2>目录</h2>
-<a href="#a1">:point_right:1.1静态变量</a><br>
-<a href="#a2">:point_right:1.2静态类</a><br>
-<a href="#a3">:point_right:1.3静态方法</a><br>
-<a href="#a4">:point_right:1.4静态构造函数</a><br>
+:point_right:<a href="#a1">1.1静态变量<a><br>
+:point_right:<a href="#a2">1.2静态类<a><br>
+:point_right:<a href="#a3">1.3静态方法<a><br>
+:point_right:<a href="#a4">1.4静态构造函数<a><br>
 <p id="a1"></p><br>
 
 ## :blue_book:1.1静态变量
