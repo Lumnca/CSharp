@@ -5,4 +5,4 @@
 :ledger: [C#类静态](https://github.com/Lumnca/StudyLanguage/blob/master/C%23%E7%B1%BB%E7%9A%84%E9%9D%99%E6%80%81.md)<br><br>
 :ledger: [C#继承](https://github.com/Lumnca/StudyLanguage/blob/master/%E7%BB%A7%E6%89%BF.md)<br><br>
 :ledger: [C#数组与元组](https://github.com/Lumnca/StudyLanguage/blob/master/%E6%95%B0%E7%BB%84%E4%B8%8E%E5%85%83%E7%BB%84.md)<br><br>
-<b>更多文章正在加紧更新中...最近更新时间:2018.9.13 21:18 <b>
+<b>更多文章正在加紧更新中...最近更新时间:2018.9.16 19：18 <b>
