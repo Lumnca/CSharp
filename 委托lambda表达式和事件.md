@@ -107,7 +107,45 @@ lambda表达式与委托直接相关，当参数是委托类型时，就可以�
 这里实例化的是数组，数组的每个元素都指向MathOperations不同的方法调用，最后用一个方法来调用委托，以及委托的值。   
    
 ### 2.4 Action<T>和Func<T>委托 ###
-        
-        
-        
-        
+除了为每个参数和返回定义一个新委托外，还可以是用Action和Func委托，Action委托表示引用一个void返回类型的方法。可以增加T的参数来引用参数不同的方法：
+
+```C#
+        static void Main(string[] args)
+        {
+            //对无参数方法的引用 
+            Action act = new Action(show);
+            //对一个参数方法的引用
+            Action<int> va = new Action<int>(show);
+            act();
+            va(99);
+        }
+        //Action只能够引用void型的方法
+        static void show(){
+            Console.WriteLine("Hello World!");
+        }
+        static void show(int i){
+            Console.WriteLine(i);
+        }
+```
+同样的Func其实就是对有返回值的方法进行引用，只不过不一样的是它要对返回类型进行传递参数；
+
+```C#
+        static void Main(string[] args)
+        {
+            //对Square引用，返回值为double，参数为double，所以有两个
+            Func<double,double> f1 = new Func<double,double>(Square);
+            var result = f1(2.5);
+            Console.Write(result);
+
+        }
+        static  int Add(int a,int b) => a+b;
+        static double Square(double d) => d*d;
+```
+对于含有2个参数的：
+
+```C#
+         Func<int ,int ,int> f2 = new Func<int ,int ,int>(Add);
+         var result = f2(5,6);
+         Console.Write(result);
+```
+### 2.5多播 ###
