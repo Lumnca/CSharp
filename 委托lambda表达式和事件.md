@@ -4,7 +4,7 @@
 ## 目录点击链接
 :point_right:<a href="#one" >1引用方法<a><br>
 :point_right:<a href="#two" >2委托<a><br>
-:point_right:<a href="#three" ><a><br>
+:point_right:<a href="#three" >3lambda表达式<a><br>
 :point_right:<a href="#four" ><a><br>
 
  
@@ -149,3 +149,127 @@ lambda表达式与委托直接相关，当参数是委托类型时，就可以�
          Console.Write(result);
 ```
 ### 2.5多播 ###
+前面使用的每个委托都只包含一个方法调用，调用委托的次数与调用方法的次数相同。如果要调用多个方法，就需要多次显式调用这个委托，使用多播可以通过一个委托可以调用多个方法：
+
+```C#
+        static void Main(string[] args)
+        {
+            Action act = new Action(show);
+            act += display;
+
+            act();
+
+        }
+        static void show() => Console.WriteLine("Hello World!");
+        static  void display() => Console.WriteLine("I am LMC");
+```
+在上面的示例中，因为要储存对两个方法的引用，所以示例化了一个委托数组。而这里只是在同一个委托上添加两个操作，多播委托可以使用运算符+和+=，另外还可以像
+下面的代码一样：
+
+```C#
+        Action act1 = new Action(show);
+        Action act2 = new Action(display);
+        Action acts = act1 + act2;
+        acts();
+```
+当然也可以直接在act1后面直接加上act2直接改变原来的委托。使用-和-=删除方法,但这种形式只能返回void；否则就只能得到委托调用的最后一个方法的结果。对于多播问题，一般会按照添加顺序进行，如果中途某一个出现错误，则会停止迭代，当然可以使用Delegate类定义GetInvocationList()方法，它返回一个委托数组，可以在这个数组里面使用try和catch来获取异常以及继续迭代。
+
+### 2.6匿名方法 ###
+匿名方法既是没有命名的方法，在委托的时候不传如方法，而直接写上：
+
+```C#
+        static void Main(string[] args)
+        {
+            string mid = ",middle part";
+            Func<string,string> anonDel = delegate(string param)
+            {
+                param += mid;
+                param +="and this was added to the string";
+                return param;
+            };
+            Console.WriteLine(anonDel("Start of string"));
+        }
+```
+可以看出匿名函数可以减少代码编写，不必定义，还可以引用外部的变量。使用匿名要注意两点： 在匿名方法中不能调用跳转语句如：break，goto等；在匿名方法中不能访问不安全的代码，也不能访问在匿名方法外边的ref，out参数，但可以使用在匿名方法外部定义的其他变量。
+
+****
+<h2 id = "three">:book:lambda表达式</h2>
+<a href="#title">:arrow_up:返回目录</a>
+
+对于上面的匿名方法我们可以使用lambda表达式：
+
+```C#
+            string mid = ",middle part";
+            Func<string,string> lambda = param =>
+            {
+                param += mid;
+                param +="and this was added to the string";
+                return param;
+            };
+            Console.WriteLine(lambda("Start of string"));
+```
+注意lambda只是一个变量名，并不是系统自带的，你可以命名不同的名字。lambda表达式只是需要满足这样的写法即可。
+
+### 3.1参数 ###
+lambda表达式有几种定义参数的方式。如果只有一个参数，只写出参数名就足够了，代码的lambda表达式使用了参数s。因为委托类型定义了一个string参数，所以s的类型就是string。实现代码string.Format()方法来返回一个字符串，在调用该委托时，就把该字符串最终写入控制台：
+
+```C#
+     Func<string,string> oneParam = s =>
+     $"change uppercase {s.ToUpper()}";
+     Console.WriteLine(oneParam("usa"));
+```
+s为传入参数，对应Func第二个参数strig类型， =>为方法传递值，如果委托使用多个参数，就把这些参数名放在圆括号中如下：
+
+```C#
+      Func<int ,int ,int> twoParam = (x,y) => x*y;
+      Console.WriteLine(twoParam(5,6));
+```
+### 3.2 多行代码 ###
+如果lambda表达式只有一条语句，在方法块内就不需要花括号和return语句，因为编译器会自动添加，但是如果代码超过一行就需要自己写return语句如上面的匿名方法调用。
+
+### 3.3 闭包 ###
+可以通过lambda表达式访问外部的变量，这称为闭包，闭包是非常好用的功能，但是如果使用不当，也会非常危险
+
+```C#
+            int result = 0;
+            Func<int ,int ,int> twoParam = (x,y) => 
+            {
+                //调用外部的result
+                result = x*y;
+                return result;
+            };
+            Console.WriteLine(twoParam(5,6));
+```
+在下面这种情况下：
+
+```C#
+    int result = 2;
+    Func<int ,int ,int> twoParam = (x,y) => 
+   {
+      result += x*y;
+      return result;
+   };
+   result = 5;
+   Console.WriteLine(twoParam(5,6));
+```
+result在后面进行来修改，这就会修改初始值，改为调用result = 5 的形式，如果只是赋值，则不会有影响。
+
+
+
+
+
+
+
+
+        
+        
+
+
+
+
+
+
+
+
+
+
