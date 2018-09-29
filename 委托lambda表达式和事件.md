@@ -253,23 +253,64 @@ s为传入参数，对应Func第二个参数strig类型， =>为方法传递值�
    Console.WriteLine(twoParam(5,6));
 ```
 result在后面进行来修改，这就会修改初始值，改为调用result = 5 的形式，如果只是赋值，则不会有影响。
+****
+<h2 id = "four">:book:事件</h2>
+<a href="#title">:arrow_up:返回目录</a>
 
+### 4.1:bulb:事件发布程序 ###
+事件基于委托，为委托提供了一种发布订阅机制，首先是事件的引发：
 
+```C#
+            //事件的引发 
+            public class Result :EventArgs
+            {
+               public int result;
+               public Result(int r)
+               {
+                   result = r;
+               }
+            }
+```
 
+然后就是事件的约定,
 
+```C#
+        public class Computer
+        {
+            public event EventHandler<Result> EventTrigger;
+            public void Add(int a,int b)
+            {
+                Console.WriteLine("计算机正在计算"+a+"+"+b);
+                EventTrigger?.Invoke(this,new Result(a+b));
+            }
+        }
+```
+最后是事件的触发：
+```C#
+         public class Student
+        {
+            public string Name;
+            public  Student(string n)
+            {
+                Name = n;
+            }
+            //引发定义
+            public void UseComputer(object sender,Result R)
+            {
+                Console.WriteLine($"{Name}用计算机算出来结果是 {R.result}");
+            }
+       
+        }
+```
+调用：
 
-
-
-
-        
-        
-
-
-
-
-
-
-
-
-
-
+```C#
+        static void Main(string[] args)
+        {
+             var s = new Student("XXX");
+             var c = new Computer();
+             //添加事件订阅，取消订阅使用-=；
+             c.EventTrigger+=s.UseComputer;
+             c.Add(1,1);
+        }
+```
