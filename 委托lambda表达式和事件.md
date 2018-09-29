@@ -5,7 +5,7 @@
 :point_right:<a href="#one" >1引用方法<a><br>
 :point_right:<a href="#two" >2委托<a><br>
 :point_right:<a href="#three" >3lambda表达式<a><br>
-:point_right:<a href="#four" ><a><br>
+:point_right:<a href="#four" >4事件<a><br>
 
  
 <h2 id = "one">:book:引用方法</h2>
