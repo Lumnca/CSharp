@@ -10,6 +10,6 @@
 <br><br>
 :ledger:[C#字符串和正则表达式](https://github.com/Lumnca/StudyLanguage/blob/master/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.md)
 <br><br>
-:ledger:[集合](https://github.com/Lumnca/StudyLanguage/blob/master/%E9%9B%86%E5%90%88.md)
+:ledger:[C#集合](https://github.com/Lumnca/StudyLanguage/blob/master/%E9%9B%86%E5%90%88.md)
 <br><br>
 <b>更多文章正在加紧更新中...最近更新时间:2018.10.9 20：47 <b>
