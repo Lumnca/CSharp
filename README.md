@@ -12,4 +12,7 @@
 <br><br>
 :ledger:[C#集合](https://github.com/Lumnca/StudyLanguage/blob/master/%E9%9B%86%E5%90%88.md)
 <br><br>
+:ledger:[C#LINQ](https://github.com/Lumnca/StudyLanguage/blob/master/C%23LINQ.md)
+
+
 <b>更多文章正在加紧更新中...最近更新时间:2018.10.15 20：10 <b>
