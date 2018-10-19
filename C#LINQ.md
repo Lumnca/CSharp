@@ -5,6 +5,7 @@
 ## 目录点击链接 ##
 :point_right:<a href="#one" >1LINQ概述<a><br>
 :point_right:<a href="#two" >2标准的查询操作符<a><br>
+:point_right:<a href="#three" >3集合操作<a><br>
 
 
  ***
@@ -109,19 +110,372 @@ Where,OrderByDescending 和Select只是LINQ定义的几个查询操作符，LINQ
 |Join,GroupJoin|连接操作符用于合并不直接相关的集合，使用Join操作符，可以根据键选择器函数连接两个集合，这类似于SQL中的JOIN，GroupJoin操作符连接两个集合，组合其结果|
 |GroupBy,ToLookup|组合操作符把数据放在组中，GroupBy操作符组合有公共键的元素。ToLookup通过创建一个一对多字典，来组合元素。|
 
+### :leaves:2.1筛选 ###
+
+首先是基于成员数据的条件筛选，使用where子句，可以合并多个表达式，例如，找出1-10大于5且为偶数的数据，转递给where子句的表达式的结果类型应是布尔类型，下面是LINQ表达式：
+
+```C#
+            var Nums = new List<int>();
+
+            Nums.AddRange(new int[]{
+                1,2,3,4,5,6,7,8,9,10
+            });
+            var qurey = from val in Nums
+            where val%2==0&&val>5
+            select val;
+
+            foreach (var item in qurey)
+            {
+                Console.WriteLine(item);
+            }
+ ```
+ 还可以使用lambda表达式：
+ 
+ ```C#
+            var Nums = new List<int>();
+
+            Nums.AddRange(new int[]{
+                1,2,3,4,5,6,7,8,9,10
+            });
+            //引入lambda表达式用属性扩展
+            var qurey = Nums.Where(n=>n>5&&n%2==0).Select(n=>n);
+
+            foreach (var item in qurey)
+            {
+                Console.WriteLine(item);
+            }
+ ```
+ 
+ 上面是用成员数据条件来筛选数据，还可以使用索引值筛选：
+ 
+ ```C#
+            var Students = new List<Student>();
+
+            Students.AddRange(new Student[]{
+                new Student("Sarry",20170105,"女",574),
+                new Student("Bob",20170212,"男",549),
+                new Student("Kay",20170317,"男",567),
+                new Student("Karas",20170132,"男",571),
+                new Student("Marry",20170209,"女",561),
+                new Student("Salfy",20170341,"女",548),
+                new Student("Lumnca",20170401,"男",579)
+            });
+            //传入两个参数，第一个为对象，第二个为索引值
+            var Stu = Students.Where((s,index)=>s.StudentName.StartsWith("K")&&index%2==0);
+
+            foreach (var item in Stu)
+            {
+                Console.WriteLine(item.StudentName);
+                //返回Kay，索引值从0开始，按照列表加下来索引值为2的倍速且名字以K开头
+            }
+```
+第三个是基于类型的筛选，使用OfType()扩展方法，这里数组据包含string和int对象，使用OfType扩展方法，把string传给范型参数：
+
+```C#
+     Object[] data = {"A","Heelo World",56,new Student("as",12,"ac",56),23.6,"###"};
+       //范型约束条件
+     var query = data.OfType<string>();
+
+     foreach (var item in query)
+     {
+         Console.WriteLine(item);
+     } 
+```
+第四个是基于对象数组里面的数组查询，使用from复合语句，如查询一堆学生中一堆成绩中，超过平均分的成绩，先下定义学生类：
+
+```C#
+    public class Student
+    {
+        public string StudentName;
+        public int StudentID;
+        public string Sex;
+        public int[] Score;
+        public int Avg{get;set;}=0;
+
+        public Student(string n,int i,string s,int[] c)
+        {
+            StudentName = n;
+            StudentID = i;
+            Sex = s;
+            Score = c;
+            foreach (var item in c)
+            {
+                Avg+=item;
+            }
+            Avg=Avg/3;
+        }
+```
+使用from复合语句
+```C#
+            var Students = new List<Student>();
+
+            Students.AddRange(new Student[]{
+                new Student("Sarry",20170105,"女",new int[]{74,89,86}),
+                new Student("Bob",20170212,"男",new int[]{79,86,67}),
+                new Student("Kay",20170317,"男",new int[]{88,96,58}),
+                new Student("Karas",20170132,"男",new int[]{84,71,97})
+            });
+            //s,代表学生类，c代表成绩数据堆
+            var Stu = from s in Students
+            from c in s.Score
+            where c > s.Avg
+            //自定义返回格式
+            select s.StudentName + "`s over avg:" + c;
+
+            foreach (var item in Stu)
+            {
+                Console.WriteLine(item);
+            }
+ ```
+
+与上面一样的结果还可以使用lambda表达式：
+
+```C#
+      //使用SelectMany()方法复合
+      var query = Students.SelectMany(S=>S.Score,(C,S)=>new{AllScore = S,Stu = C})
+      // S 推入 S的分数数组，C推入整个学生类，，构造新的隐式类含两个参数AllScore，Stu，分别代表前面推入的内容，
+      .Where(St=>St.AllScore > St.Stu.Avg)
+      //使用上面构造的隐式类
+      .Select(St=>St.Stu.StudentName+"over avgscore have there :"+St.AllScore);
+ ```
+
+还有对筛选的数据排序功能如上面表说的一样，使用orderby降序排布，orderdescending升序排布
+
+```C#
+            var Students = new List<Student>();
+
+            Students.AddRange(new Student[]{
+                new Student("Sarry",20170105,"女",new int[]{74,89,86}),
+                new Student("Bob",20170212,"男",new int[]{79,86,67}),
+                new Student("Kay",20170317,"男",new int[]{88,96,58}),
+                new Student("Karas",20170132,"男",new int[]{84,71,97}),
+                new Student("Karas",20170217,"男",new int[]{84,77,97}),
+                new Student("Poacs",20170347,"女",new int[]{84,72,91}),
+                new Student("Tom",20170234,"男",new int[]{85,76,86}),
+                new Student("Griop",20170119,"男",new int[]{88,90,77}),
+                new Student("Rite",20170236,"女",new int[]{86,91,88})
+            });
+
+            var Stu = from s in Students
+            //排布参数传入多个，如果检索到相等的就检索下一个参数排布，也可以使用二次排布
+            orderby s.Score[0],s.Score[2],s.Score[1]
+            select s.StudentID+"    "+ s.Score[0]+"  "+s.Score[2]+"   "+s.Score[1];
 
 
+            foreach (var item in Stu)
+            {
+                Console.WriteLine(item);
+            }
+```
+接下来于SQL一样的还有分组group子句, 如对上面例子的性别统计如下:
+
+```C#
+            var query = from s in Students
+            
+            //以Sex为分组，一样的分到一组
+            group s by s.Sex  into  Stu
+            
+            orderby Stu.Count()
+            select new {
+                //Key代表分组值
+                Sex = Stu.Key,
+                Num = Stu.Count()
+            };
 
 
+            foreach (var item in query)
+            {
+                Console.WriteLine(item.Sex+"  :  "+item.Num);
+            }
+```
+
+当然也可以对分组限定,使用lambda表达式：
+
+```C#
+     var query = Students.GroupBy(n=>n.Avg).Where(n=>n.Key>80).OrderBy(s=>s.Key).Select(s=> new{
+         Sex = s.Key,
+         Num = s.Count(),
+     });
+```
+### leaves:2.2对嵌套的对象分组 ###
+
+如果分组的对象包括一个可以分组的对象，可以在select语句里面添加匿名类型：
+
+```C#
+     var query = from r in Students
+     group r by r.StudentName into r1
+     let count = r1.Count()
+     select new {
+                 Name = r1.Key,
+                 Num = count,
+                 //嵌套
+                 AllScore = from r2 in r1
+                 orderby r2.Score[0],r2.Score[1]
+                 select r2.Score[0]+"   "+r2.Score[1]+"    "+r2.Score[2]
+     };
 
 
+     foreach (var item in query)
+     {
+          Console.WriteLine(item.Name+"  ");
+          //嵌套循环
+          foreach (var val in item.AllScore)
+          {
+               Console.WriteLine(val);
+          }
+    }
+```
+### leaves:2.3内链接 ###
+
+使用join子句可以根据特定的条件合并两个数据源，但之前要获得两个连接的列表:
+
+```C#
+            //两个必须要有一个相同的索引值
+            var Address = new Dictionary<int,string>(){
+                [20170105] = "成都",
+                [20170212] = "重庆",
+                [20170317] = "武汉",
+                [20170132] = "长沙",
+                [20170217] = "南昌",
+                [20170347] = "杭州",
+                [20170234] = "上海",
+                [20170119] = "北京",
+                [20170236] = "南京"
+            };
+            var top = from t in Address
+            select new {
+                ID = t.Key,
+                Add = t.Value
+            };
+            var stu = from s in Students
+            select new{
+                AvgNum = s.Avg,
+                ID = s.StudentID,
+                Name = s.StudentName
+            };
+
+            var StudentTop = from t in top join s in stu on t.ID equals s.ID
+            select new{
+                Name = s.Name,
+                Address = t.Add,
+                ID = s.ID
+            };
+
+            foreach (var item in StudentTop)
+            {
+                Console.WriteLine(item.Name+"   "+item.ID+"   "+item.Address);
+            }
+```
+
+当然看个人习惯可以写在一个LINQ语句里面。
+
+使用take属性可以限制输出个
+
+```C#
+    var StudentTop = (from t in top join s in stu on t.ID equals s.ID
+    select new{
+          Name = s.Name,
+          Address = t.Add,
+          ID = s.ID
+    }).Take(4);
+```
+
+### leaves:2.4左外连接 ###
+
+上面的内链接只能匹配到具有相同ID的学生，如果还有没有匹配学生的ID，则不会现实，使用左外连接可以实现没有匹配的数据:
+
+```C#
+            var Students = new List<Student>();
+
+            Students.AddRange(new Student[]{
+                new Student("Sarry",20170105,"女",new int[]{74,89,86}),
+                new Student("Bob",20170212,"男",new int[]{79,86,67}),
+                new Student("Kay",20170317,"男",new int[]{88,96,58}),
+                new Student("Karas",20170132,"男",new int[]{84,71,97}),
+                new Student("Karas",20170217,"男",new int[]{84,77,97}),
+                new Student("Poacs",20170347,"女",new int[]{84,72,91}),
+                new Student("Tom",20170234,"男",new int[]{85,76,86}),
+                new Student("Griop",20170119,"男",new int[]{88,90,77}),
+                new Student("Rite",20170236,"女",new int[]{86,91,88}),
+                new Student("Helar",20170219,"男",new int[]{86,97,83}),
+                new Student("Jaer",20170209,"女",new int[]{81,87,83}),
+                new Student("Helar",20170333,"女",new int[]{78,97,99})
+            });
+
+            var Address = new Dictionary<int,string>(){
+                [20170105] = "成都",
+                [20170212] = "重庆",
+                [20170317] = "武汉",
+                [20170132] = "长沙",
+                [20170217] = "南昌",
+                [20170347] = "杭州",
+                [20170234] = "上海",
+                [20170119] = "北京",
+                [20170236] = "南京",
+                [20170403] = "西安",
+                [20170423] = "福州"
+            };
+            var top = from t in Address
+            select new {
+                ID = t.Key,
+                Add = t.Value
+            };
+            var stu = from s in Students
+            select new{
+                AvgNum = s.Avg,
+                ID = s.StudentID,
+                Name = s.StudentName
+            };
+
+            var StudentTop = (from s in stu join t in top on s.ID equals t.ID into st//为匹配别名
+            from address in st.DefaultIfEmpty()//address为匹配参数
+            orderby s.Name
+            select new{
+                Name = s.Name,
+                Address = address ==null ? "没有匹配到地址" : address.Add,//未匹配参数返回null ，
+                ID = s.ID
+            }).Take(20);
+
+            foreach (var item in StudentTop)
+            {
+                Console.WriteLine(item.Name+"   "+item.ID+"   "+item.Address);
+            }
+```
+
+当然也有右连接在表的合并时交换顺序即可完成右连接
 
 
+### leaves:2.5 组连接###
 
+上面的连接都是基于一对一的属性，如果需要多对属性匹配，则需要使用组连接用法与上面的类似，这里就简单给出一个为代码：
 
+```C#
+    var q = (from r in XXX join r2 in XXXX on 
+    new{
+      one = XXX.valueone,
+      two = XXX.valuetwo,
+      ...
+    }
+    equals
+    new{
+    one= XXXX.valueone,
+    two = XXXX.valuetwo,
+    ...
+    }
+    into item
+    select new{
+    ...
+    };
+```
+像这样就可以匹配两个列表的多个匹配项,并将他们传入item中
 
+ ***
+<p id = "three"></p>  
+  
+## :four_leaf_clover:集合操作##
 
+<a href="#title">:arrow_up:返回目录</a>
 
-
+扩展方法Distinct()，Union(),Intersect(),Except(),Zip()都是集合操作
 
 
