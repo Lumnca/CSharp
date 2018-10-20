@@ -759,4 +759,32 @@ Skip(i)表示跳过i个数据，Take(i)表示显示i个数据。像上面那样�
 像这样上面在LINQ语句后面添加的语句就无效了，同样的还有其他转换语句.
 
 ```C#
+          select new{
+                Name = s.StudentName,
+                Sum = s.Score.Sum()
+          }).ToArray();
+          // 
+          var AllStudents =( from s in students
+          select new{
+                Name = s.StudentName,
+                Sex = s.Sex
+          }).ToLookup(n=>n.Name,s=>s.Sex);
 
+          foreach (var item in AllStudents)
+          {
+              Console.WriteLine(item.Key+"   ");
+          }
+          //
+            var AllStudents =( from s in students
+            select new{
+                Name = s.StudentName,
+                Sex = s.Sex
+            }).ToDictionary(n=>n.Name,s=>s.Sex);
+
+
+            foreach (var item in AllStudents)
+            {
+                Console.WriteLine(item.Key+"   "+item.Value);
+            }
+            //
+ ```
