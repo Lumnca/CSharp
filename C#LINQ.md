@@ -6,6 +6,7 @@
 :point_right:<a href="#one" >1LINQ概述<a><br>
 :point_right:<a href="#two" >2标准的查询操作符<a><br>
 :point_right:<a href="#three" >3集合操作<a><br>
+:point_right:<a href="#four" >4分区<a><br>
 
 
  ***
@@ -476,4 +477,286 @@ Where,OrderByDescending 和Select只是LINQ定义的几个查询操作符，LINQ
 
 <a href="#title">:arrow_up:返回目录</a>
 
-扩展方法Distinct()，Union(),Intersect(),Except(),Zip()都是集合操作
+扩展方法Distinct()，Union(),Intersect(),Except(),Zip()都是集合操作下表说明作用：
+
+|集合操作符|说明|
+|:--:|:--:|
+|Disinct()|返回序列中通过使用指定的非重复元素，去掉重复元素，子需要一个集合就可以|
+|Union()|可以连接两个集合，组合其结果|
+|Intersect()|返回两个组合都有的元素|
+|Except()|返回只出现在其中一个集合中的元素|
+|Zip()|把两个集合合并为一个|
+
+* Disinct() 去除单个集合中重复的元素
+
+```C#
+            var SomeStudents = new List<Student>();
+
+            var p1 = new Student("Tom",20170234,"男",new int[]{85,76,86});
+            var p2 = p1;
+            SomeStudents.AddRange(new Student[]{
+                new Student("Sarry",20170105,"女",new int[]{74,89,86}),
+                p2,
+                p1,
+                new Student("Bob",20170212,"男",new int[]{79,86,67}),
+                new Student("Kay",20170317,"男",new int[]{88,96,58}),
+                new Student("Karas",20170132,"男",new int[]{84,71,97}),
+                new Student("Karas",20170217,"男",new int[]{84,77,97}),
+                new Student("Poacs",20170347,"女",new int[]{84,72,91}),
+            });
+            //去重只对相同引用有效，对于属性相同不能去除如p1与p2为相同引用，所以只能得到一个。
+            var newstudents = SomeStudents.Distinct<Student>();
+            foreach (var item in newstudents)
+            {
+                Console.WriteLine(item.StudentName);
+            }
+```
+
+* Unoin()连接两个集合，组合其结果，去掉重复元素,两个集合要为同类型,
+
+```C#
+            var SomeStudents = new List<Student>();
+            var OtherStudents = new List<Student>();
+            var p1 = new Student("Tom",20170234,"男",new int[]{85,76,86});
+            var p2 = p1;
+            SomeStudents.AddRange(new Student[]{
+                new Student("Sarry",20170105,"女",new int[]{74,89,86}),
+                p2,
+                p1,
+                new Student("Bob",20170212,"男",new int[]{79,86,67}),
+                new Student("Kay",20170317,"男",new int[]{88,96,58}),
+                new Student("Karas",20170132,"男",new int[]{84,71,97}),
+                new Student("Karas",20170217,"男",new int[]{84,77,97}),
+                new Student("Poacs",20170347,"女",new int[]{84,72,91}),
+            });
+            OtherStudents.AddRange(new Student[]{
+                new Student("Tom",20170234,"男",new int[]{85,76,86}),
+                new Student("Griop",20170119,"男",new int[]{88,90,77}),
+                new Student("Rite",20170236,"女",new int[]{86,91,88}),
+                new Student("Helar",20170219,"男",new int[]{86,97,83}),
+                new Student("Jaer",20170209,"女",new int[]{81,87,83}),
+                new Student("Helar",20170333,"女",new int[]{78,97,99}),
+                p1
+            });
+            //添加另一个集合
+            var AllStudents = SomeStudents.Union(OtherStudents);
+
+            foreach (var item in AllStudents)
+            {
+                Console.WriteLine(item.StudentName);
+            }
+```
+
+* Intersect()，返回两个集合中共有元素组合的集合
+
+```C#
+            var SomeStudents = new List<Student>();
+            var OtherStudents = new List<Student>();
+
+            var p1 = new Student("Tom",20170234,"男",new int[]{85,76,86});
+            var p2 = p1;
+            SomeStudents.AddRange(new Student[]{
+                new Student("Sarry",20170105,"女",new int[]{74,89,86}),
+                p2,
+                new Student("Bob",20170212,"男",new int[]{79,86,67}),
+                new Student("Kay",20170317,"男",new int[]{88,96,58}),
+                new Student("Karas",20170132,"男",new int[]{84,71,97}),
+                new Student("Karas",20170217,"男",new int[]{84,77,97}),
+                new Student("Poacs",20170347,"女",new int[]{84,72,91}),
+            });
+
+            OtherStudents.AddRange(new Student[]{
+                new Student("Tom",20170234,"男",new int[]{85,76,86}),
+                new Student("Griop",20170119,"男",new int[]{88,90,77}),
+                new Student("Rite",20170236,"女",new int[]{86,91,88}),
+                new Student("Helar",20170219,"男",new int[]{86,97,83}),
+                new Student("Jaer",20170209,"女",new int[]{81,87,83}),
+                new Student("Helar",20170333,"女",new int[]{78,97,99}),
+                p1
+            });
+            //只返回p1与p2这两个相同的引用
+            var AllStudents = SomeStudents.Intersect(OtherStudents).OrderBy(r=>r.StudentName);
+            foreach (var item in AllStudents)
+            {
+                Console.WriteLine(item.StudentName);
+            }
+```
+
+* Zip()合并两个集合，两个不同类型的集合
+
+```C#
+            var SomeStudents = new List<Student>();
+            var OtherStudents = new List<Student>();
+
+            var p1 = new Student("Tom",20170234,"男",new int[]{85,76,86});
+            var p2 = p1;
+            SomeStudents.AddRange(new Student[]{
+                new Student("Sarry",20170105,"女",new int[]{74,89,86}),
+                p2,
+                new Student("Bob",20170212,"男",new int[]{79,86,67}),
+                new Student("Kay",20170317,"男",new int[]{88,96,58}),
+                new Student("Karas",20170132,"男",new int[]{84,71,97}),
+                new Student("Karas",20170217,"男",new int[]{84,77,97}),
+                new Student("Poacs",20170347,"女",new int[]{84,72,91}),
+            });
+
+            OtherStudents.AddRange(new Student[]{
+                new Student("Tom",20170234,"男",new int[]{85,76,86}),
+                new Student("Griop",20170119,"男",new int[]{88,90,77}),
+                new Student("Rite",20170236,"女",new int[]{86,91,88}),
+                new Student("Helar",20170219,"男",new int[]{86,97,83}),
+                new Student("Jaer",20170209,"女",new int[]{81,87,83}),
+                new Student("Helar",20170333,"女",new int[]{78,97,99}),
+                p1
+            });
+            var Address = new Dictionary<int,string>(){
+                [20170105] = "成都",
+                [20170212] = "重庆",
+                [20170317] = "武汉",
+                [20170132] = "长沙",
+                [20170217] = "南昌",
+                [20170347] = "杭州",
+                [20170234] = "上海",
+                [20170119] = "北京",
+                [20170236] = "南京",
+                [20170403] = "西安",
+                [20170423] = "福州"
+            };
+
+            var AllStudents = SomeStudents.Union(OtherStudents);
+            var AllInformation = AllStudents.Zip(Address,(s,a)=>s.StudentName + "  Address:   "+a.Value);
+            
+            //以两边从前到后的顺序排布
+            foreach (var item in AllInformation)
+            {
+                Console.WriteLine(item);
+            }
+
+```
+
+ ***
+<p id = "four"></p>  
+  
+## :four_leaf_clover:分区##
+
+<a href="#title">:arrow_up:返回目录</a>
+
+扩展方法Take()和Skip()等的分区操作可用于分页，比如要对信息进行4个一排布：
+
+```C#
+            
+            var SomeStudents = new List<Student>();
+ 
+            SomeStudents.AddRange(new Student[]{
+                new Student("Sarry",20170105,"女",new int[]{74,89,86}),
+                new Student("Tom",20170234,"男",new int[]{85,76,86}),
+                new Student("Bob",20170212,"男",new int[]{79,86,67}),
+                new Student("Kay",20170317,"男",new int[]{88,96,58}),
+
+                new Student("Karas",20170132,"男",new int[]{84,71,97}),
+                new Student("Poacs",20170347,"女",new int[]{84,72,91}),
+                new Student("Tom",20170234,"男",new int[]{85,76,86}),
+                new Student("Griop",20170119,"男",new int[]{88,90,77}),
+
+                new Student("Rite",20170236,"女",new int[]{86,91,88}),
+                new Student("Helar",20170219,"男",new int[]{86,97,83}),
+                new Student("Jaer",20170209,"女",new int[]{81,87,83}),
+                new Student("Helar",20170333,"女",new int[]{78,97,99}),
+            });
+
+            int PageSize = 4;
+            int StudentNum = SomeStudents.Count()/PageSize;
+
+            for(int i=0;i<StudentNum;i++)
+            {
+                int x = 1;
+                Console.WriteLine($"-------------{i+1}-------------");
+                var s = SomeStudents.Skip(i*PageSize).Take(PageSize);
+                foreach (var item in s)
+                {
+
+                    Console.WriteLine($"{x++}  :   {item.StudentName}");
+                }
+            }
+```
+
+Skip(i)表示跳过i个数据，Take(i)表示显示i个数据。像上面那样就可以实现规定输出。
+
+
+ ***
+<p id = "five"></p>  
+  
+## :four_leaf_clover:其他操作符##
+
+<a href="#title">:arrow_up:返回目录</a>
+
+### leaves:4.1聚合操作符 ###
+
+聚合操作符不返回一个序列，而返回一个值。
+
+* Count() 返回集合的项数
+
+```C#
+  let num = SomeStudents.Count();
+  //或者
+  int num =SomeStudents.Count();
+```
+
+* Sum()汇总序列中所以数字的和,对前面的例子中的分数数组进行求和
+
+```C#
+            var StudentSum =   from s in SomeStudents
+            select new{
+                Name = s.StudentName,
+                Sum = s.Score.Sum()
+            };
+
+            foreach (var item in StudentSum)
+            {
+                Console.WriteLine($"{item.Name}  SumScore:  {item.Sum}");
+            }
+```
+当然还有Max(),Min(),Average()的使用方式与Count()或Sum()相同，这里就不一一列举了。
+
+### leaves:4.2转换操作符 ###
+
+前面说过查询可以推迟到访问数据项时进行，在使用迭代中使用查询时，查询会执行。而使用转换操作符会立即执行查询操作，把查询结果放在数组，列表或者字典中。
+
+```C#
+            var SomeStudents = new List<Student>();
+ 
+            SomeStudents.AddRange(new Student[]{
+                new Student("Sarry",20170105,"女",new int[]{74,89,86}),
+                new Student("Tom",20170234,"男",new int[]{85,76,86}),
+                new Student("Bob",20170212,"男",new int[]{79,86,67}),
+                new Student("Kay",20170317,"男",new int[]{88,96,58}),
+
+                new Student("Karas",20170132,"男",new int[]{84,71,97}),
+                new Student("Poacs",20170347,"女",new int[]{84,72,91}),
+                new Student("Tom",20170234,"男",new int[]{85,76,86}),
+                new Student("Griop",20170119,"男",new int[]{88,90,77}),
+
+                new Student("Rite",20170236,"女",new int[]{86,91,88}),
+                new Student("Helar",20170219,"男",new int[]{86,97,83}),
+                new Student("Jaer",20170209,"女",new int[]{81,87,83}),
+                new Student("Helar",20170333,"女",new int[]{78,97,99}),
+            });
+
+            var StudentSum =(from s in SomeStudents
+            select new{
+                Name = s.StudentName,
+                Sum = s.Score.Sum()
+            }).ToList();
+
+             SomeStudents.AddRange(new Student[]{
+                 new Student("Lmc",20170329,"男",new int[]{79,99,99})
+             });
+            foreach (var item in StudentSum)
+            {
+                Console.WriteLine($"{item.Name}  SumScore:  {item.Sum}");
+            }
+```
+像这样上面在LINQ语句后面添加的语句就无效了，同样的还有其他转换语句.
+
+```C#
+
