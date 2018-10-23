@@ -17,4 +17,4 @@
 :ledger:[C#文件和流](https://github.com/Lumnca/StudyLanguage/blob/master/%E6%96%87%E4%BB%B6%E5%92%8C%E6%B5%81.md)
 
 
-<b>更多文章正在加紧更新中...最近更新时间:2018.10.15 20：10 <b>
+<b>文章最后更新时间:2018.10.23 20：00 <b>
