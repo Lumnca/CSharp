@@ -15,6 +15,7 @@
 :ledger:[C#LINQ](https://github.com/Lumnca/StudyLanguage/blob/master/C%23LINQ.md)
 <br><br>
 :ledger:[C#文件和流](https://github.com/Lumnca/StudyLanguage/blob/master/%E6%96%87%E4%BB%B6%E5%92%8C%E6%B5%81.md)
-
-
+<br><br>
+:ledger:[C#MySQl链接](https://github.com/Lumnca/StudyLanguage/blob/master/C%23%E9%93%BE%E6%8E%A5MySQl.md)
+<br><br>
 <b>文章最后更新时间:2018.10.23 20：00 <b>
