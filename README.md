@@ -18,4 +18,6 @@
 <br><br>
 :ledger:[C#MySQl链接](https://github.com/Lumnca/StudyLanguage/blob/master/C%23%E9%93%BE%E6%8E%A5MySQl.md)
 <br><br>
+:ledger:[C#错误异常处理](https://github.com/Lumnca/StudyLanguage/blob/master/%E9%94%99%E8%AF%AF%E4%B8%8E%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86.md)
+<br><br>
 <b>文章最后更新时间:2018.10.23 20：00 <b>
