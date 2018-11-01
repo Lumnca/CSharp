@@ -257,8 +257,49 @@ result在后面进行来修改，这就会修改初始值，改为调用result =
 <h2 id = "four">:book:事件</h2>
 <a href="#title">:arrow_up:返回目录</a>
 
+所谓事件，就是在某个事物的触发后，接着相继响应的后继事件，比如当你按下关机按钮，按下是一个工程，关机是被触发的事件，像这样类型的称为事件，在C#中其实也就是在一个方法触发另一个方法，好比C语言的函数指针。在一个函数里使用另一个函数。
+
+
+
 ### 4.1:bulb:事件发布程序 ###
-事件基于委托，为委托提供了一种发布订阅机制，首先是事件的引发：
+事件基于委托，为委托提供了一种发布订阅机制，首先要有事件委托与事件定义
+
+```C#
+    class InfoEventArgs 
+    {
+        public void a(string s){
+            Console.WriteLine($"这是被触发事件，你的字符串是：{s}");
+        }
+    }
+    class EventDealer
+    {
+        //定义委托
+        public delegate void MyEvent(string s);
+        //定义事件
+        public event MyEvent MyDealer;
+
+        public void b(string s){
+            Console.WriteLine("这个触发后下面会触发其他的事件");
+            //事件调用
+            MyDealer(s);
+        } 
+    }
+
+```
+
+上述代码只是实现了事件的定义与使用，并没有指定要被触发的事件。所以在主方法中绑定触发事件：
+
+```C#
+            var d = new EventDealer();
+            var e = new InfoEventArgs();
+            //绑定事件
+            d.MyDealer+=e.a;
+            d.b("Hello World!");
+```
+
+
+
+
 
 ```C#
             //事件的引发 
