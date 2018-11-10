@@ -22,4 +22,6 @@
 <br><br>
 :ledger:[C#异步编程](https://github.com/Lumnca/StudyLanguage/blob/master/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B.md)
 <br><br>
-<b>文章最后更新时间:2018.11.5<b>
+:ledger:[C#特性与反射](https://github.com/Lumnca/StudyLanguage/blob/master/%E5%8F%8D%E5%B0%84%E5%85%83%E6%95%B0%E6%8D%AE.md)
+<br><br>
+<b>文章最后更新时间:2018.11.10<b>
