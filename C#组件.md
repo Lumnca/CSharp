@@ -6,6 +6,10 @@
 
 :checkered_flag:[C#窗体事件](#a2)
 
+:checkered_flag:[C# McssageBox](#a3)
+
+:checkered_flag:[C# 窗体控件](#a4)
+
 <b id='a1'></b>
 
 ### :leftwards_arrow_with_hook:C#窗体组件 ###
@@ -217,8 +221,136 @@ namespace Test
 在 MainForm 窗体中添加鼠标单击窗体事件，并在该事件对应的方法中写入打开 NewForm 窗体的代码，具体代码如下。
 
 ```C#
-
+namespace Test
+{
+    public partial class Form1 : Form
+    {
+        private Form2 form2 = null;
+        public Form1()
+        {
+            InitializeComponent();
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (form2 == null || form2.IsDisposed)   //若为null或者已释放
+            {
+                form2 = new Form2();       //实例化一个新类
+                form2.Show();              //显示
+            }
+            else
+            {
+                form2.Activate();          //置顶
+            }
+        }
+    }
+}
 ```
 
+以上代码是一个按钮点击实现打开另一个窗体界面，对于窗体只需要实例化这个窗口类即可，但是要注意多次打开重复的窗体如上代码可以避免重复打开同一个窗体。
+
+<b id='a3'></b>
+
+### :leftwards_arrow_with_hook:C# McssageBox ###
+
+:arrow_up:[返回目录](#t)
+
+ McssageBox 类似于警告框，可以弹出信息，也称为消息框，消息框在 Windows 操作系统经常用到，例如在将某个文件或文件夹移动到回收站中时系统会自动弹出如下图所示的消息框:
+ 
+![](http://c.biancheng.net/uploads/allimg/190329/4-1Z3291A953L8.gif)
+
+在 Windows 窗体应用程序中向用户提示操作时也是采用消息框弹出的形式。
+
+消息框是通过 McssageBox 类来实现的，在 MessageBox 类中仅定义了 Show 的多个重载方法，该方法的作用就是弹出一个消息框。
+
+由于 Show 方法是一个静态的方法，因此调用该方法只需要使用**MessageBox.Show( 参数 )**的形式即可弹出消息框。
+
+消息框在显示时有不同的样式， 例如标题、图标、按钮等。
+
+常用的 Show 方法参数如下表所示。
+
+|方法	|说明|
+|:--:|:---:|
+|DialogResult Show(string text)	|指定消息框中显示的文本（text）|
+|DialogResult Show(string text, string caption)|	指定消息框中显示的文本（text）以及消息框的标题（caption）|
+|DialogResult Show(string text, string caption,  MessageBoxButtons buttons)	|指定消息框中显示的文本（text）、消息框的 标题（caption）以及消息框中显示的按钮 （buttons）|
+|DialogResult Show(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)|	指定消息框中显示的文本（text）、消息框的 标题（caption ）、消息框中显示的按钮 （buttons）以及消息框中显示的图标（icon）|
 
 
+在上面所列出方法的参数中还涉及两个枚举类型，一个是 MessageBoxButtons，一个是 MessageBoxIcon。下面分别介绍这两个枚举类型中的具体值：
+
+**MessageBoxButtons 枚举类型主要用于设置消息框中显示的按钮，具体的枚举值如下。**
+
+* OK：在消息框中显示“确定”按钮。
+* OKCancel：在消息框中显示“确定”和“取消”按钮。
+* AbortRetryIgnore：在消息框中显示“中止” “重试”和“忽略”按钮。
+* YesNoCancel：在消息框中显示“是” “否”和“取消”按钮。
+* YesNo：在消息框中显示“是”和“否”按钮。
+* RetryCancel：在消息框中显示“重试”和“取消”按钮。
+
+**MessageBoxIcon 枚举类型主要用于设置消息框中显示的图标，具体的枚举值如下。**
+
+* None：在消息框中不显示任何图标。
+* Hand、Stop、Error：在消息框中显示由一个红色背景的圆圈及其中的白色X组成 的图标。
+* Question：在消息框中显示由圆圈和其中的一个问号组成的图标。
+* Exclamation、Warning：在消息框中显示由一个黄色背景的三角形及其中的一个感叹号组成的图标。
+* Asterisk、Information：在消息框中显示由一个圆圈及其中的小写字母 i 组成的图标。
+
+调用 MessageBox 类中的 Show 方法将返回一个 DialogResult 类型的值。
+
+**DialogResult 也是一个枚举类型，是消息框的返回值，通过单击消息框中不同的按钮得到不同的消息框返回值。**
+
+DialogResult 枚举类型的具体值如下。
+
+* None：消息框没有返回值，表明有消息框继续运行。
+* OK：消息框的返回值是 0K （通常从标签为“确定”的按钮发送）。
+* Cancel：消息框的返回值是 Cancel （通常从标签为“取消”的按钮发送）。
+* Abort：消息框的返回值是 Abort （通常从标签为“中止”的按钮发送）。
+* Retry：消息框的返回值是 Retry （通常从标签为“重试”的按钮发送）。
+* Ignore：消息框的返回值是 Ignore （通常从标签为“忽略“的按钮发送）。
+* Yes：消息框的返回值是 Yes （通常从标签为“是“的按钮发送）。
+* No：消息框的返回值是 No （通常从标签为“否“的按钮发送）。
+
+下面通过实例来演示消息框的应用。
+
+【实例】创建一个窗体，单击该窗体弹出一个消息框提示“是否打开新窗口”，如果单击“是”按钮，则打开新窗口，如果单击“否”按钮，则关闭当前窗体。
+
+根据题目要求，完成该实例需要如下步骤。
+
+1) 创建所需的窗体
+
+创建一个名为 Windows_3 的项目，并在该项目中添加两个窗体，分别命名为 MainForm、 MessageForm。
+
+2) 在 MainForm 窗体中添加事件
+
+在 MainForm 窗体中添加鼠标单击事件，并在相应的事件中添加如下代码:
+
+```C#
+        private void button1_Click(object sender, EventArgs e)
+        {
+            DialogResult Dr = MessageBox.Show("你确定打开新的窗体？","提示",MessageBoxButtons.YesNo,MessageBoxIcon.Warning);
+            if(Dr == DialogResult.Yes)
+            {
+                if (form2 == null || form2.IsDisposed)
+                {
+                    form2 = new Form2();
+                    form2.Show();
+                }
+                else
+                {
+                    form2.Activate();
+                }
+            }
+        }
+```
+
+可以看到我们的标题为提示，信息为："你确定打开新的窗体？"，使用的含有YES和NO的按钮，图标为警告类型。效果图如下：
+
+![](http://c.biancheng.net/uploads/allimg/190329/4-1Z3291F434219.gif)
+
+<b id='a4'></b>
+
+### :leftwards_arrow_with_hook:C#窗体组件 ###
+
+:arrow_up:[返回目录](#t)
+
+窗体控件大多数组件使用方法一致，只不过含有自己特殊的组件，统一使用Name属性获取组件，再对类属性进行访问即可获取不同组件所有的方法与属性值，详细教程可参见![窗体组件教程](http://c.biancheng.net/view/2960.html)
