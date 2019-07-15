@@ -217,3 +217,104 @@ namespace Test
     }
 }
 ```
+
+<b id='a2'></b>
+
+### :leftwards_arrow_with_hook:Command类 ###
+
+:arrow_up:[返回目录](#t)
+
+`在 System.Data.SqlClient 命名空间下，对应的 Command 类为 SqlCommand，在创建 SqlCommand 实例前必须已经创建了与数据库的连接。SqlCommand 类中常用的构造方法如下表所示。`
+
+|构造方法|	说明|
+|:---:|:------:|
+|SqlCommand()|	无参构造方法|
+|SqlCommand(string commandText,SqlConnection conn)	|带参的构造方法，第 1 个参数是要执行的 SQL 语句，第 2 个参数是数据库的连接对象|
+
+`对数据库中对象的操作不仅包括对数据表的操作，还包括对数据库、视图、存储过程等数据库对象的操作，接下来主要介绍的是对数据表和存储过程的操作。在对不同数据库对象进行操作时，SqlCommand 类提供了不同的属性和方法，常用的属性和方法如下表所示。`
+
+|属性或方法|	说明|
+|:---:|:------:|
+|CommandText	|属性，Command 对象中要执行的 SQL 语句|
+|Connection	|属性，获取或设置数据库的连接对象|
+|CommandType	|属性，获取或设置命令类型|
+|Parameters	|属性，设置 Command 对象中 SQL 语句的参数|
+|ExecuteReader()	|方法，获取执行查询语句的结果|
+|ExecuteScalar()	|方法，返回查询结果中第 1 行第 1 列的值|
+|ExecuteNonQuery()|	方法，执行对数据表的增加、删除、修改操作|
+
+注意，如果要有返回查询结果的话，是多列多行需要SqlDataReader类型数据。如下所示：
+
+```C#
+    public partial class Form1 : Form
+    {
+        private SqlConnection sqldb;
+        public Form1()
+        {
+            InitializeComponent();
+        }
+        private void laoding(object sender,EventArgs s)
+        {
+           
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            String sqlConString = "server =. ; uid = Lmc ; pwd =123456 ; database = User";
+            
+            try
+            {
+                sqldb = new SqlConnection(sqlConString);
+                sqldb.Open();
+                SqlCommand sql = new SqlCommand("select * from UserInfor",sqldb);
+                //返回结果集
+                SqlDataReader str = sql.ExecuteReader();
+                String s = "";
+                //循环结果集
+                while(str.Read())
+                {
+                    //使用数组代表该行第几个数据
+                    s += str[0];
+                }
+                MessageBox.Show($"打开成功！{s}", "提示信息", MessageBoxButtons.OK);
+                
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "提示信息", MessageBoxButtons.OK);
+            }
+            finally
+            {
+                if (sqldb != null)
+                {
+                    sqldb.Close();
+                }
+            }
+        }
+    }
+```
+
+这是对于有具体sql语句参数的查询，如果sql需要程序引入参数，这就不能够使用这种方法。需要使用参数代替方法
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
